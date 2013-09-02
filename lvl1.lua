@@ -7,7 +7,7 @@ function lvl1:init()
 end
 
 function lvl1:draw()
-    love.graphics.printf("This is the first level. Lorem Ipsum and all that shit", 120, 200, 150, "center")
+    --love.graphics.printf("This is the first level. Lorem Ipsum and all that shit", 120, 200, 150, "center")
 end
 
 function lvl1:mousepressed(x, y, button)
@@ -19,7 +19,6 @@ function lvl1:leave()
 end
 
 
---All these local bitches will be moved into some external module
 --Generates a grid 
 local function genGrid(width, height)
     local newGrid = {}
