@@ -27,7 +27,7 @@ function UT.locateGridPos(mouseX, mouseY, tileSize)
 end
 
 --Fills in the grid given two coordinates
-function UT.fillGrid(grid, tileSize, towers)
+function UT.fillGrid(grid, tileSize)
     for k, v in pairs(grid) do
         for i, j in pairs(v) do
             if j == 1 then
@@ -39,9 +39,9 @@ function UT.fillGrid(grid, tileSize, towers)
 end
 
 --Called within fillGrid. Adds the tower to the grid
-function UT.addTower(gridX, gridY, towers)
+function UT.addTower(gridX, gridY)
     newTower = TW(10, 10, 50, {gridX, gridY})
     towers[#towers + 1] = newTower
 end
-    
+
 return UT

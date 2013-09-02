@@ -5,19 +5,22 @@ local HC = require "hardoncollider"
 local pos, speed, tileSize, width, height = UT.pos, UT.speed, UT.tileSize,
 UT.width, UT.height
 
-local start = {0, 275, 1}
-local stop = {375, 575}
-local turns = {{375, 275, 4}}
-local e1 = EN(5, 5, 10, {start[1], start[2]}, 1)
 local enemies = {}
 local towers = {}
 
 local grid = UT.genGrid()
 
 local function on_collide(dt, shape1, shape2)
-	for i = 1, #enemies do
-		if shape1 == enemies[i] or shape2 == enemies[i] then
-			enemies[i].velocity = {x = 0, y = 50}
+	if shape1 == stop then
+		shape2 = nil
+		print "hi"
+	elseif shape2 == stop then
+		shape1 = nil
+		print "hi2"
+	end
+	for k, v in pairs(enemies) do
+		if shape1 == v or shape2 == v then
+			v.velocity = {x = 0, y = 50}
 		end
 	end
 end
@@ -36,8 +39,8 @@ function lvl1:update(dt)
 	else
 		timer = timer - dt
 	end
-	for i = 1, #enemies do
-		enemies[i]:move(enemies[i].velocity.x * dt, enemies[i].velocity.y * dt)
+	for k, v in pairs(enemies) do
+		v:move(v.velocity.x * dt, v.velocity.y * dt)
 	end
 
 	Collider:update(dt)
@@ -49,15 +52,17 @@ function lvl1:init()
 	enemies = {}
 	timer = 3
 	turn = Collider:addPoint(375, 275)
+	stop = Collider:addRectangle(350, 550, 50, 50)
 end
 
 function lvl1:draw()
     --love.graphics.printf("This is the first level. Lorem Ipsum and all that shit", 120, 200, 150, "center")
-	UT.fillGrid(grid, tileSize, towers)
-	for i = 1, #enemies do
-		enemies[i]:draw("fill")
+	UT.fillGrid(grid, tileSize)
+	for k,v in pairs(enemies) do
+		v:draw("fill")
 	end
 	turn:draw("fill")
+	stop:draw("fill")
 end
 
 function lvl1:mousepressed(x, y, button)
