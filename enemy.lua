@@ -1,4 +1,4 @@
-Class = require 'hump.class' 
+Class = require 'hump.class'
 
 Enemy = Class{}
 
@@ -8,3 +8,4 @@ function Enemy:init(health, attack, speed, pos)
 	self.speed = speed
 	self.pos = pos
 end
+

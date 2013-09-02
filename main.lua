@@ -13,7 +13,7 @@ function love.load()
 end
 
 function love.draw()
-    love.graphics.rectangle("line", 0, 0, 800, 600)
+    --love.graphics.rectangle("line", 0, 0, 800, 600)
 end
 
 function love.keypressed(key)
@@ -23,7 +23,7 @@ function love.keypressed(key)
 end
 
 --Game code
-function mainMenu:draw()  
+function mainMenu:draw()
     --Stuff happens and gamestate switches
     if mainMenu.started then
         GS.switch(lvl1)
@@ -36,9 +36,9 @@ end
 function mainMenu:init()
     mainMenu.started = false
 end
-    
+
 function mainMenu:keyreleased(key)
     if key == 's' then
         mainMenu.started = true
     end
-end    
+end
