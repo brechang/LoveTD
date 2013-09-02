@@ -7,3 +7,19 @@ function Tower:init(health, attack, radius)
 	self.attack = attack
 	self.radius = radius
 end
+
+function Tower:getHealth()
+	return self.health
+end
+
+function Tower:getAttack()
+	return self.attack
+end
+
+function Tower:getRadius()
+	return self.radius
+end
+
+function Tower:setHealth(hp)
+	self.health = hp
+end
