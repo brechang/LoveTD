@@ -11,7 +11,6 @@ local stop = {375, 575}
 local turns = {{375, 275, 4}}
 local e1 = EN(5, 5, 10, {start[1], start[2]}, 1)
 local enemies = {}
-local towers = {}
 
 local grid = UT.genGrid()
 
@@ -25,17 +24,19 @@ function lvl1:update(dt)
 end
 
 function lvl1:init()
+    --nothing
     love.graphics.setColor(255,0,0)
 	Collider = HC(100, on_collide)
 	enemy1 = Collider:addRectangle(0, 270, 10, 10)
 	enemy1.velocity = {x = 50, y = 0}
 
 	turn = Collider:addPoint(375, 275)
+
 end
 
 function lvl1:draw()
     --love.graphics.printf("This is the first level. Lorem Ipsum and all that shit", 120, 200, 150, "center")
-	UT.fillGrid(grid, tileSize, towers)
+	UT.fillGrid(grid, tileSize)
 	enemy1:draw("fill")
 	turn:draw("fill")
 end
