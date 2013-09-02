@@ -23,3 +23,5 @@ end
 function Tower:setHealth(hp)
 	self.health = hp
 end
+
+return Tower
