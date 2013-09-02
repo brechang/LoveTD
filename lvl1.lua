@@ -12,11 +12,13 @@ local grid = UT.genGrid()
 
 local function on_collide(dt, shape1, shape2)
 	if shape1 == stop then
-		shape2 = nil
-		print "hi"
+        print(shape2.number)
+        Collider.remove(shape2)
+        enemies[shape2.number] = nil
 	elseif shape2 == stop then
-		shape1 = nil
-		print "hi2"
+        print(shape1.number)
+        Collider.remove(shape1)
+        enemies[shape1.number] = nil
 	end
 	for k, v in pairs(enemies) do
 		if shape1 == v or shape2 == v then
@@ -28,6 +30,7 @@ end
 local function add_enemy()
 	enemy = Collider:addRectangle(0, 270, 10, 10)
 	enemy.velocity = {x = 50, y = 0}
+    enemy.number = #enemies + 1
 	Collider:addToGroup("enemies", enemy)
 	enemies[#enemies + 1] = enemy
 end
@@ -52,7 +55,7 @@ function lvl1:init()
 	enemies = {}
 	timer = 3
 	turn = Collider:addPoint(375, 275)
-	stop = Collider:addRectangle(350, 550, 50, 50)
+	stop = Collider:addRectangle(350, 550, 30, 30)
 end
 
 function lvl1:draw()
