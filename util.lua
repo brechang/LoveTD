@@ -40,7 +40,7 @@ end
 
 --Called within fillGrid. Adds the tower to the grid
 function UT.newTower(gridX, gridY)
-    newTower = TW(1, 1, 50, {gridX, gridY})
+    newTower = TW(1, 1, 200, {gridX, gridY})
 	return newTower
 end
 

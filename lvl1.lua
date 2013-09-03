@@ -9,11 +9,9 @@ local grid = UT.genGrid()
 
 local function on_collide(dt, shape1, shape2)
 	if shape1 == stop then
-        print(shape2.number)
         Collider.remove(shape2)
         enemies[shape2.number] = nil
 	elseif shape2 == stop then
-        print(shape1.number)
         Collider.remove(shape1)
         enemies[shape1.number] = nil
 	end
@@ -41,10 +39,14 @@ function lvl1:update(dt)
 	for _, t in pairs(towers) do
 		for _, v in pairs(enemies) do
 			local x1, y1 = v:center()
-			local x2, y2 = t:getPos()[1], t:getPos()[2]
+			local x2, y2 = 50*t:getPos()[1]+25, 50*t:getPos()[2]+25
+           -- print("dist x1: " .. x1 .. " dist x2: " .. x2 .. " dist y1: " .. y1 .. " dist y2: " .. y2)
+           --print("dist: " .. dist(x1, y1, x2, y2) .. " tower_radius: " .. t:getRadius())
 			if dist(x1, y1, x2, y2) <= t:getRadius() then
+                print "within radius"
 				v.hp = v.hp - 1
 				if v.hp == 0 then
+                    print "should die"
 					Collider.remove(v)
 					enemies[v.number] = nil
 				end
