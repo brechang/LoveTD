@@ -7,17 +7,67 @@ UT.width, UT.height
 
 local grid = UT.genGrid()
 
-local function on_collide(dt, shape1, shape2)
-	if shape1 == stop then
-        Collider.remove(shape2)
-        enemies[shape2.number] = nil
-	elseif shape2 == stop then
-        Collider.remove(shape1)
-        enemies[shape1.number] = nil
+local function intable(tabl, obj)
+	for _, v in pairs(tabl) do
+		if obj == v then
+			return true
+		end
 	end
-	for k, v in pairs(enemies) do
-		if shape1 == v or shape2 == v then
-			v.velocity = {x = 0, y = 50}
+	return false
+end
+
+local function on_collide(dt, shape1, shape2)
+--~ 	if shape1 == stop then
+--~         Collider.remove(shape2)
+--~         enemies[shape2.number] = nil
+--~ 	elseif shape2 == stop then
+--~         Collider.remove(shape1)
+--~         enemies[shape1.number] = nil
+--~ 	end
+--~ 	for k, v in pairs(enemies) do
+--~ 		if shape1 == v or shape2 == v then
+--~ 			v.velocity = {x = 0, y = 50}
+--~ 		end
+--~ 	end
+	if intable(enemies, shape1) then
+		if shape2 == stop then
+			Collider.remove(shape1)
+			enemies[shape1.number] = nil
+		elseif shape2 == turn then
+			shape1.velocity = {x = 0, y = 50}
+		else
+			shape1.hp = shape1.hp - 1
+			if shape1.hp <= 0 then
+				Collider.remove(shape1)
+				enemies[shape1.number] = nil
+			end
+			Collider.remove(shape2)
+			projectiles[shape2.number] = nil
+		end
+	elseif intable(enemies, shape2) then
+		if shape1 == stop then
+			Collider.remove(shape2)
+			enemies[shape2.number] = nil
+		elseif shape1 == turn then
+			shape2.velocity = {x = 0, y = 50}
+		else
+			shape2.hp = shape2.hp - 1
+			if shape2.hp <= 0 then
+				Collider.remove(shape2)
+				enemies[shape2.number] = nil
+			end
+			Collider.remove(shape1)
+			projectiles[shape1.number] = nil
+		end
+	elseif intable(projectiles, shape1) then
+		if shape2 == stop then
+			Collider.remove(shape1)
+			projectiles[shape1.number] = nil
+		end
+	elseif intable(projectiles, shape2) then
+		if shape1 == stop then
+			Collider.remove(shape2)
+			projectiles[shape2.number] = nil
 		end
 	end
 end
@@ -31,12 +81,15 @@ local function add_enemy()
 	enemies[enemy.number] = enemy
 end
 
-local function genProjectile(x, y)
-    projectile = Collider:addCircle(x, y, 20)
-    projectile.velocity = {x = 0, y = 0}
+local function genProjectile(x1, y1, enemy)
+    projectile = Collider:addCircle(x1, y1, 5)
     projectile.number = #projectiles + 1
     projectiles[projectile.number] = projectile
-
+	projectile.maxSpeed = 200
+	x2, y2 = enemy:center()
+	projectile.velocity = {x = x2 - x1, y = y2 - y1}
+	projectile.en = enemy
+	Collider:addToGroup("projectiles", projectile)
     return projectile
 end
 
@@ -52,25 +105,45 @@ function lvl1:update(dt)
 			local x1, y1 = v:center()
 
             --position of the tower
-			local x2, y2 = 50*t:getPos()[1]+25, 50*t:getPos()[2]+25
-			if dist(x1, y1, x2, y2) <= t:getRadius() then
-                p = genProjectile(x2, y2)
-                projectileX, projectileY = p:center()
-                p:move((x1 - projectileX) * dt, (y1 - projectileY)* dt)
-                    
+			local x2, y2 = 50*t:getPos()[1]-25, 50*t:getPos()[2]-25
+			if dist(x1, y1, x2, y2) <= t:getRadius() and t:getRate() == 0 then
+                p = genProjectile(x2, y2, v)
+				t:setRate(t:getMaxRate())
+
 					--Collider.remove(v)
 					--enemies[v.number] = nil
 			end
 		end
 	end
+
 	if timer <= dt then
 		add_enemy()
 		timer = 2
 	else
 		timer = timer - dt
 	end
-	for k, v in pairs(enemies) do
+
+	for _, v in pairs(enemies) do
 		v:move(v.velocity.x * dt, v.velocity.y * dt)
+	end
+
+	for _, t in pairs(towers) do
+		if t:getRate() <= dt then
+			t:setRate(0)
+		else
+			t:setRate(t:getRate() - dt)
+		end
+	end
+
+	-- COME BACK TO DIS
+	for _, p in pairs(projectiles) do
+		x2, y2 = p.en:center()
+		x1, y1 = p:center()
+		p.velocity = {x = x2 - x1, y = y2 - y1}
+		local len = math.sqrt(p.velocity.x^2 + p.velocity.y^2)
+		p.velocity.x = p.velocity.x / len * p.maxSpeed
+		p.velocity.y = p.velocity.y / len * p.maxSpeed
+		p:move(p.velocity.x * dt, p.velocity.y * dt)
 	end
 
 	Collider:update(dt)
@@ -98,9 +171,7 @@ function lvl1:draw()
         v:draw("fill")
     end
 
-	turn:draw("fill")
 	stop:draw("fill")
-
 end
 
 function lvl1:mousepressed(x, y, button)

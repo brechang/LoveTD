@@ -18,6 +18,10 @@ function Tower:setRate(r)
 	self.rate = r
 end
 
+function Tower:getMaxRate()
+	return self.maxRate
+end
+
 function Tower:getAttack()
 	return self.attack
 end
