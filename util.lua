@@ -14,7 +14,7 @@ function UT.genGrid()
     for i = 1, UT.width/UT.tileSize do
         newGrid[i] = {}
         for j = 1, UT.height/UT.tileSize do
-            newGrid[i][j] = 0
+            newGrid[i][j] = nil
         end
     end
     return newGrid
@@ -30,7 +30,7 @@ end
 function UT.fillGrid(grid, tileSize)
     for k, v in pairs(grid) do
         for i, j in pairs(v) do
-            if j == 1 then
+            if j then
                 love.graphics.rectangle("fill", tileSize*(k - 1), tileSize*(i - 1),
                 tileSize, tileSize)
             end
@@ -39,9 +39,9 @@ function UT.fillGrid(grid, tileSize)
 end
 
 --Called within fillGrid. Adds the tower to the grid
-function UT.addTower(gridX, gridY)
-    newTower = TW(10, 10, 50, {gridX, gridY})
-    towers[#towers + 1] = newTower
+function UT.newTower(gridX, gridY)
+    newTower = TW(1, 1, 50, {gridX, gridY})
+	return newTower
 end
 
 return UT

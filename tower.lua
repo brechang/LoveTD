@@ -1,16 +1,21 @@
-Class = require 'hump.class' 
+Class = require 'hump.class'
 
 Tower = Class{}
 
-function Tower:init(health, attack, radius, pos)
-	self.health = health
+function Tower:init(maxRate, attack, radius, pos)
+	self.maxRate = maxRate
 	self.attack = attack
 	self.radius = radius
     self.pos    = pos
+	self.rate = 0
 end
 
-function Tower:getHealth()
-	return self.health
+function Tower:getRate()
+	return self.rate
+end
+
+function Tower:setRate(r)
+	self.rate = r
 end
 
 function Tower:getAttack()
@@ -25,8 +30,6 @@ function Tower:getPos()
     return self.pos
 end
 
-function Tower:setHealth(hp)
-	self.health = hp
-end
+
 
 return Tower
