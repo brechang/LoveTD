@@ -30,6 +30,4 @@ function Tower:getPos()
     return self.pos
 end
 
-
-
 return Tower
